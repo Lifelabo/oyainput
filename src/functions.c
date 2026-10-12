@@ -97,6 +97,14 @@ void put_romaji(ROMAJI_INFO ri) {
 
 }
 
+void put_ctrl_m() {
+	send_event(EV_KEY, KEY_LEFTCTRL, 1);
+	send_event(EV_SYN, SYN_REPORT, 0);
+	output_char(KEY_M);
+	send_event(EV_KEY, KEY_LEFTCTRL, 0);
+	send_event(EV_SYN, SYN_REPORT, 0);
+}
+
 void put_loyakey(__u16 leftOyaKeyCode) {
 	output_char(leftOyaKeyCode);
 }

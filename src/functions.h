@@ -9,6 +9,7 @@ void put_royakey(__u16 rightOyaKeyCode);
 Boolean is_imeon(char *home_dir);
 Boolean exist_previous();
 void put_romaji(ROMAJI_INFO ri);
+void put_ctrl_m();
 int trim(char *s);
 Boolean exist_file(char *path);
 Boolean find_kbdevent_info(KBDDEVINFO *devs, int* devcnt, int maxdevs);

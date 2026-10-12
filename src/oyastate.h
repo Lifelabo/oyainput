@@ -11,6 +11,7 @@ void set_right_oyakey(__u16 kc);
 void set_char_time(long char_time);
 void set_oya_time(long oya_time);
 void set_nicola_time(long nicola_time);
+void set_kutouten_kakutei(Boolean b);
 void add_key_moji(__u16 kc, int m);
 void add_left_key_moji(__u16 kc, int m);
 void add_right_key_moji(__u16 kc, int m);

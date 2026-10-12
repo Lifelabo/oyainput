@@ -373,6 +373,13 @@ void set_oya_time(long oya_time){
 	e_oyaTime = oya_time;
 }
 
+// 句読点の後にCtrl+Mを出力して確定するかどうか（デフォルトはしない）
+static Boolean kutoutenKakutei = FALSE;
+
+void set_kutouten_kakutei(Boolean b){
+	kutoutenKakutei = b;
+}
+
 void set_nicola_time(long nicola_time){
 	if (nicola_time <= 0 || nicola_time >= 1000) return;
 	e_nicolaTime = nicola_time;
@@ -627,13 +634,22 @@ int is_state_first() {
 	return (_state == STATE_FIRST);
 }
 
+// 文字を出力する。KUTOUTENKAKUTEI=TRUEのとき、@キーによる「、」、qキーによる「。」の場合は続けてCtrl+Mを出力する
+static void put_keymap_moji(KEYMAP_INFO *ki) {
+	ROMAJI_INFO *ri = romaKeys + ki->moji;
+	put_romaji(*ri);
+	if (kutoutenKakutei && ((ki->keyCode == KEY_LEFTBRACE && ki->moji == MOJI_COMMA) ||
+		(ki->keyCode == KEY_Q && ki->moji == MOJI_PERIOD))) {
+		put_ctrl_m();
+	}
+}
+
 void output_moji(__u16 m) {
 	int len = oyakanaTableRomajiSize;
 	for(int i=0; i < len; i++) {
 		KEYMAP_INFO *ki = oyakanaTableRomaji + i;
 		if(ki->keyCode == m && ki->moji <= MOJI_MAX) {
-			ROMAJI_INFO *ri = romaKeys + ki->moji;
-			put_romaji(*ri);
+			put_keymap_moji(ki);
 			break;
 		}
 	}
@@ -650,8 +666,7 @@ void output_oya_moji(__u16 okey, __u16 mkey) {
 		for(int i = 0; i < len; i++) {
 			KEYMAP_INFO *ki = oyakanaLTableRomaji + i;
 			if(ki->keyCode == mkey && ki->moji <= MOJI_MAX) {
-				ROMAJI_INFO *ri = romaKeys + ki->moji;
-				put_romaji(*ri);
+				put_keymap_moji(ki);
 				return;
 			}
 		}
@@ -662,8 +677,7 @@ void output_oya_moji(__u16 okey, __u16 mkey) {
 		for(int i = 0; i < len; i++) {
 			KEYMAP_INFO *ki = oyakanaRTableRomaji + i;
 			if(ki->keyCode == mkey && ki->moji <= MOJI_MAX) {
-				ROMAJI_INFO *ri = romaKeys + ki->moji;
-				put_romaji(*ri);
+				put_keymap_moji(ki);
 				return;
 			}
 		}

@@ -365,6 +365,9 @@ Boolean load_config(char* path)
 		}else if (strcasecmp(key, "NICOLATIME")==0) {
 			printf("NICOLATIME: %s\n", value);
 			set_nicola_time(atoi(value));
+		}else if (strcasecmp(key, "KUTOUTENKAKUTEI")==0) {
+			printf("KUTOUTENKAKUTEI: %s\n", value);
+			set_kutouten_kakutei(strcasecmp(value, "TRUE")==0);
 		} else if (strcasecmp(key, "KEYADD")==0) {
 			sscanf(value, "%[^:]:%s", keyname, mojiname);
 			kc = keyname_to_code(keyname);
@@ -426,6 +429,9 @@ Boolean save_config(char *path)
 	fprintf(fp, "\n");
 	fprintf(fp, "# 親指単独打鍵みなし期間(ms)\n");
 	fprintf(fp, "#NICOLATIME=50\n");
+	fprintf(fp, "\n");
+	fprintf(fp, "# 句読点(@キーの「、」、qキーの「。」)の後にCtrl+Mを出力して確定する(TRUE/FALSE)\n");
+	fprintf(fp, "#KUTOUTENKAKUTEI=FALSE\n");
 	fprintf(fp, "\n");
 
 	fclose(fp);

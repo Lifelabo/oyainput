@@ -167,6 +167,20 @@ void set_signal_handler() {
 	sigprocmask(SIG_UNBLOCK, &mask, NULL);
 }
 
+// コロンキー(KEY_APOSTROPHE)とBackspaceキーを入れ替える
+__u16 swap_colon_bs(__u16 code) {
+	if (code == KEY_APOSTROPHE) return KEY_BACKSPACE;
+	if (code == KEY_BACKSPACE) return KEY_APOSTROPHE;
+	return code;
+}
+
+// コロンキーとBackspaceキーを入れ替えて出力する
+void write_swapped(struct input_event *ie) {
+	struct input_event e = *ie;
+	e.code = swap_colon_bs(e.code);
+	write(fdo, &e, sizeof(e));
+}
+
 void close_app(int fdi, int fdo) {
 	ioctl(fdi, EVIOCGRAB, 0); // release hook of /dev/input/event0-9
 	close(fdi);
@@ -449,13 +463,13 @@ int main(int argc, char *argv[]) {
 			if (shift_pressed || ctrl_pressed || alt_pressed) {
 				// CTRL DOWN -> SPACE DOWN -> CTRL UP -> SPACE UP
 				if (ie.value == 1) {
-					pressing_key = ie.code;
+					pressing_key = swap_colon_bs(ie.code);
 				} else if (ie.value == 0) {
-					if (ie.code == pressing_key) {
+					if (swap_colon_bs(ie.code) == pressing_key) {
 						pressing_key = 0;
 					}
 				}
-				write(fdo, &ie, sizeof(ie));
+				write_swapped(&ie);
 				break;
 			}
 
@@ -463,7 +477,8 @@ int main(int argc, char *argv[]) {
 				if (ie.value == 1) {
 					on_otherkey_down(ie.code);
 				}
-				write(fdo, &ie, sizeof(ie));
+				// IME onのときもBackspaceキーはコロンとして出力する
+				write_swapped(&ie);
 				break;
 			}
 
@@ -475,7 +490,7 @@ int main(int argc, char *argv[]) {
 
 			if (! ime_on) {
 				printf("IME is off, keycode=%d\n", ie.code);
-				write(fdo, &ie, sizeof(ie));
+				write_swapped(&ie);
 				break;
 			}
 

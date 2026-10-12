@@ -1,7 +1,12 @@
-# oyainput-fcitx5-fix
-This is a fork of [oyainput](https://github.com/inwskatsube/oyainput), modified to support Fcitx5.  
-This project is not intended to replace the original but serves as a workaround for Fcitx5 environments until official support is available.  
-I have tested this on Fedora 42.
+# oyainput-fcitx5-backspace-colon-swap
+This is a fork of [yq0810/oyainput](https://github.com/yq0810/oyainput), which is a fork of the original [inwskatsube/oyainput](https://github.com/inwskatsube/oyainput), modified to support Fcitx5.
+This project has the following features:
+(1) supports fcitx5
+(2) swaps backspace key and colon key even when ime is off.
+(3) added KUTOUTENKAKUTEI item on .oyainputconf. When KUTOUTENKAKUTEI=TRUE, oyainput outputs Ctrl+M after kuten and touten.
+  
+This project is not intended to replace the original.  
+I have tested this on MX Linux 25.
 
 # oyainput
 software to emulate Japanese thum shift keyboard (oyayubi-shift keyboard)
