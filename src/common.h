@@ -138,7 +138,10 @@
 #define MOJI_LKAKKO 118
 #define MOJI_RKAKKO 119
 #define MOJI_COLON 120
-#define MOJI_MAX 121 // last index
+#define MOJI_BACKSLASH 121
+#define MOJI_LSQUARE 122
+#define MOJI_RSQUARE 123
+#define MOJI_MAX 124 // number of entries (last index + 1)
 
 // Oyayubi State
 #define STATE_FIRST 1
@@ -156,9 +159,10 @@
 #define RIGHTOYA 2
 
 #define IMTYPE_NONE 0
-#define IMTYPE_FCITX 1
+#define IMTYPE_FCITX5 1
 #define IMTYPE_IBUS 2
 #define IMTYPE_UIM 3
+#define IMTYPE_FCITX 4
 
 typedef struct keymapinfo {
 	__u16 keyCode;

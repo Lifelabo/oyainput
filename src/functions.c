@@ -113,13 +113,14 @@ void put_royakey(__u16 rightOyaKeyCode) {
 	output_char(rightOyaKeyCode);
 }
 
-Boolean is_fcitx_on(char *home_dir) {
+// fcitx-remote / fcitx5-remote の出力 (0:停止, 1:非アクティブ, 2:アクティブ) でIMEの状態を判定する
+static Boolean is_fcitx_remote_on(char *home_dir, const char *remote_cmd) {
 	uid_t uid = getuid();
-	uid_t euid = getegid();
+	uid_t euid = geteuid();
 
 	char cmd[BUFSIZE];
-	if (snprintf(cmd, BUFSIZE, "HOME=%s fcitx5-remote", home_dir) > BUFSIZE) {
-		die("error: Username is too long.");
+	if (snprintf(cmd, BUFSIZE, "HOME=%s %s", home_dir, remote_cmd) >= BUFSIZE) {
+		die("error: Home directory path is too long.");
 	}
 
 	seteuid(uid);
@@ -135,7 +136,7 @@ Boolean is_fcitx_on(char *home_dir) {
 
 	int n = atoi(cmd_buffer);
 	// print 
-	printf("fcitx5-remote output: %d\n", n);
+	printf("%s output: %d\n", remote_cmd, n);
 	switch(n){
 		case 0 : return FALSE; break;
 		case 1 : return FALSE; break;
@@ -145,12 +146,25 @@ Boolean is_fcitx_on(char *home_dir) {
 	return FALSE;
 }
 
-Boolean is_ibus_on() {
+Boolean is_fcitx_on(char *home_dir) {
+	return is_fcitx_remote_on(home_dir, "fcitx-remote");
+}
+
+Boolean is_fcitx5_on(char *home_dir) {
+	return is_fcitx_remote_on(home_dir, "fcitx5-remote");
+}
+
+Boolean is_ibus_on(char *home_dir) {
 	uid_t uid = getuid();
-	uid_t euid = getegid();
+	uid_t euid = geteuid();
+
+	char cmd[BUFSIZE];
+	if (snprintf(cmd, BUFSIZE, "HOME=%s ibus engine", home_dir) >= BUFSIZE) {
+		die("error: Home directory path is too long.");
+	}
 
 	seteuid(uid);
-	FILE* pipe = popen("ibus engine", "r");
+	FILE* pipe = popen(cmd, "r");
 	if (pipe == NULL) {
 		seteuid(euid);
 		return FALSE;
@@ -174,10 +188,10 @@ Boolean is_imeon(char *home_dir){
 	// and print home_dir
 	printf("is_imeon home_dir: %s\n", home_dir);
 	printf("is_imeon Input method type: %d\n", imtype);
-	if (imtype == 1) {
-		return is_fcitx_on(home_dir);
-	}else if (imtype == 2) {
-		return is_ibus_on();
+	switch (imtype) {
+		case IMTYPE_FCITX5: return is_fcitx5_on(home_dir);
+		case IMTYPE_FCITX: return is_fcitx_on(home_dir);
+		case IMTYPE_IBUS: return is_ibus_on(home_dir);
 	}
 	return TRUE;
 }

@@ -67,7 +67,8 @@ KEYMAP_INFO oyakanaTableRomajiDefault[] = {
 	{KEY_M, MOJI_SO},
 	{KEY_COMMA, MOJI_NE},
 	{KEY_DOT, MOJI_HO},
-	{KEY_SLASH, MOJI_NAKAGURO}
+	{KEY_SLASH, MOJI_NAKAGURO},
+	{KEY_RO, MOJI_BACKSLASH}
 };
 
 // 左親指キー押し下げ時の配列定義
@@ -127,7 +128,8 @@ KEYMAP_INFO oyakanaLTableRomajiDefault[] = {
 	{KEY_N, MOJI_PU},
 	{KEY_M, MOJI_ZO},
 	{KEY_COMMA, MOJI_PE},
-	{KEY_DOT, MOJI_BO}
+	{KEY_DOT, MOJI_BO},
+	{KEY_RO, MOJI_BACKSLASH}
 };
 
 // 右親指キー押し下げ時の配列定義
@@ -160,9 +162,9 @@ KEYMAP_INFO oyakanaRTableRomajiDefault[] = {
 	{KEY_V, MOJI_BU},
 	{KEY_B, MOJI_BE},
 
-	// 右手最上段 〔〕（）『』
-	{KEY_6, MOJI_LBRACKET},
-	{KEY_7, MOJI_RBRACKET},
+	// 右手最上段 ［］（）『』
+	{KEY_6, MOJI_LSQUARE},
+	{KEY_7, MOJI_RSQUARE},
 	{KEY_8, MOJI_LPAREN},
 	{KEY_9, MOJI_RPAREN},
 	{KEY_0, MOJI_LKAGI},
@@ -187,10 +189,11 @@ KEYMAP_INFO oyakanaRTableRomajiDefault[] = {
 	{KEY_M, MOJI_YU},
 	{KEY_COMMA, MOJI_MU},
 	{KEY_DOT, MOJI_WA},
-	{KEY_SLASH, MOJI_XO}
+	{KEY_SLASH, MOJI_XO},
+	{KEY_RO, MOJI_BACKSLASH}
 };
 
-ROMAJI_INFO romaKeys[] = {
+ROMAJI_INFO romaKeys[MOJI_MAX] = {
 	[MOJI_UNDEF] = {0,0,0}, /* undef */
 	[MOJI_A] = {KEY_A,0,0}, /* MOJI_A 1 */
 	[MOJI_I] = {KEY_I,0,0}, /* MOJI_I 2 */
@@ -311,7 +314,10 @@ ROMAJI_INFO romaKeys[] = {
 	[MOJI_DAKUTEN] = {0,0,0}, /* MOJI_DAKUTEN 116 */
 	[MOJI_HANDAKUTEN] = {0,0,0}, /* MOJI_HANDAKUTEN 117 */
 	[MOJI_LKAKKO] = {KEY_RIGHTBRACE,0,0}, /* MOJI_LKAGI 118 */
-	[MOJI_RKAKKO] = {KEY_BACKSLASH,0,0} /* MOJI_RKAGI 119 */
+	[MOJI_RKAKKO] = {KEY_BACKSLASH,0,0}, /* MOJI_RKAGI 119 */
+	[MOJI_BACKSLASH] = {KEY_RO,0,0}, /* MOJI_BACKSLASH 121 ROキー (Mozcでは「￥」になる) */
+	[MOJI_LSQUARE] = {KEY_RIGHTBRACE,KEY_F9,0}, /* MOJI_LSQUARE 122 ［ (「をF9で全角英数「［」に変換) */
+	[MOJI_RSQUARE] = {KEY_BACKSLASH,KEY_F9,0} /* MOJI_RSQUARE 123 ］ (」をF9で全角英数「］」に変換) */
 };
 
 // 内部変数
@@ -648,7 +654,7 @@ void output_moji(__u16 m) {
 	int len = oyakanaTableRomajiSize;
 	for(int i=0; i < len; i++) {
 		KEYMAP_INFO *ki = oyakanaTableRomaji + i;
-		if(ki->keyCode == m && ki->moji <= MOJI_MAX) {
+		if(ki->keyCode == m && ki->moji < MOJI_MAX) {
 			put_keymap_moji(ki);
 			break;
 		}
@@ -665,7 +671,7 @@ void output_oya_moji(__u16 okey, __u16 mkey) {
 		int len = oyakanaLTableRomajiSize;
 		for(int i = 0; i < len; i++) {
 			KEYMAP_INFO *ki = oyakanaLTableRomaji + i;
-			if(ki->keyCode == mkey && ki->moji <= MOJI_MAX) {
+			if(ki->keyCode == mkey && ki->moji < MOJI_MAX) {
 				put_keymap_moji(ki);
 				return;
 			}
@@ -676,7 +682,7 @@ void output_oya_moji(__u16 okey, __u16 mkey) {
 		int len = oyakanaRTableRomajiSize;
 		for(int i = 0; i < len; i++) {
 			KEYMAP_INFO *ki = oyakanaRTableRomaji + i;
-			if(ki->keyCode == mkey && ki->moji <= MOJI_MAX) {
+			if(ki->keyCode == mkey && ki->moji < MOJI_MAX) {
 				put_keymap_moji(ki);
 				return;
 			}
