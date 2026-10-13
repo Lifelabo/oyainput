@@ -3,10 +3,10 @@
 ## 本フォークについて（日本語訳）
 これは [yq0810/oyainput](https://github.com/yq0810/oyainput) のフォークです。yq0810/oyainput は、オリジナルの [inwskatsube/oyainput](https://github.com/inwskatsube/oyainput) を Fcitx5 に対応させたフォークです。
 本フォークには次の特徴があります。
-(1) fcitx5, fcitx, ibusのIMに対応しています。
-(2) IME がオフのときでも、バックスペースキーとコロンキーを入れ替えます。
-(3) .oyainputconf に KUTOUTENKAKUTEIの項目を追加しました。KUTOUTENKAKUTEI=TRUE のとき、oyainput は句点・読点の後に Ctrl+M を出力します。
-(4) ROYAKEY+6で［、ROYAKEY+7で］が出力されます。
+- (1) fcitx5, fcitx, ibusのIMに対応しています。
+- (2) IME がオフのときでも、バックスペースキーとコロンキーを入れ替えます。
+- (3) .oyainputconf に KUTOUTENKAKUTEIの項目を追加しました。KUTOUTENKAKUTEI=TRUE のとき、oyainput は句点・読点の後に Ctrl+M を出力します。
+- (4) ROYAKEY+6で［、ROYAKEY+7で］が出力されます。
 
 本フォークはオリジナル版を置き換えることを意図したものではありません。
 MX Linux 25 で動作を確認しています。
